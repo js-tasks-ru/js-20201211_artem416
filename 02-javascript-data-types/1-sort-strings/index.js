@@ -8,13 +8,15 @@ export function sortStrings(arr, param = "asc") {
     const newArr = arr.concat();
 
     function smartSort(first, second) {
-        let fN = first.normalize(),
-            sN = second.normalize();
-        return fN.localeCompare(sN, "ru", { caseFirst: "upper" });
+        return first.localeCompare(second, "ru", { caseFirst: "upper" });
+    }
+
+    function smartSortReverse(first, second) {
+        return second.localeCompare(first, "ru", { caseFirst: "lower" });
     }
 
     if (param === "desc") {
-        return newArr.sort(smartSort).reverse();
+        return newArr.sort(smartSortReverse);
     }
     return newArr.sort(smartSort);
 }
