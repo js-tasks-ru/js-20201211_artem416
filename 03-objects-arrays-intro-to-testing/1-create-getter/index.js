@@ -5,12 +5,12 @@
  */
 
 export function createGetter(path) {
+    const pathArr = path.split(".");
     return function(obj) {
-        if (Object.keys(obj).length != 0) {
-            const pathArr = path.split(".");
+        if (Object.keys(obj).length > 0) {
             let answer = {...obj };
-            for (let i = 0; i < pathArr.length; i++) {
-                answer = answer[pathArr[i]];
+            for (const item of pathArr) {
+                answer = answer[item];
             }
             return answer;
         }
