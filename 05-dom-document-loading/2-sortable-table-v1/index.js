@@ -8,13 +8,22 @@ export default class SortableTable {
         this.render();
     }
 
-    getTableHeader() {
+    getTableHeader(order) {
         let headerTemplate = `<div data-element="header" class="sortable-table__header sortable-table__row">`;
         for (let i = 0; i < this.headersConfig.length; i++) {
-            headerTemplate += `    <div class="sortable-table__cell" data-id="${this.headersConfig[i].id}" data-sortable=""${this.headersConfig[i].sortable}" data-order="">
+            headerTemplate += `    <div class="sortable-table__cell" data-id="${
+        this.headersConfig[i].id
+      }" data-sortable="${this.headersConfig[i].sortable}" data-order=${
+        order ? order : ""
+      }>
             <span>${this.headersConfig[i].title}</span>
-          </div>`;
+            <span data-element="arrow" class="sortable-table__sort-arrow">
+            <span class="sort-arrow"></span>
+          </span>
+          </div>
+          `;
         }
+
         headerTemplate += `</div>`;
         return headerTemplate;
     }
@@ -57,7 +66,7 @@ export default class SortableTable {
     getTable() {
         return `
       <div class="sortable-table">
-        ${this.getTableHeader()}
+        ${this.getTableHeader(this.data.order)}
         ${this.getTableBody()}
       </div>`;
     }
