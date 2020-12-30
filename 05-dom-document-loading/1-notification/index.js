@@ -1,10 +1,15 @@
 export default class NotificationMessage {
     constructor(text = "", { type = "", duration = Number } = {}) {
+        if (NotificationMessage.activeNotification) {
+            NotificationMessage.activeNotification.remove();
+        }
         this.type = type;
         this.duration = duration;
         this.text = text;
         this.render();
     }
+
+    static activeNotification;
 
     get template() {
         return ` <div class="notification
@@ -24,22 +29,16 @@ export default class NotificationMessage {
         const element = document.createElement("div");
         element.innerHTML = this.template;
         this.element = element.firstElementChild;
+        NotificationMessage.activeNotification = this.element;
     }
 
     show(target) {
-        let notification = document.querySelector(".notification");
-        if (notification) {
-            notification.remove();
-            this.append(target);
-            setTimeout(() => this.remove(), this.duration);
-        } else {
-            this.append(target);
-            setTimeout(() => this.remove(), this.duration);
-        }
+        this.append(target);
+        setTimeout(() => this.remove(), this.duration);
     }
 
-    append(target) {
-        target ? target.append(this.element) : document.body.append(this.element);
+    append(target = document.body) {
+        target.append(this.element);
     }
 
     remove() {
@@ -48,5 +47,6 @@ export default class NotificationMessage {
 
     destroy() {
         this.element = null;
+        NotificationMessage.activeNotification = null;
     }
 }
