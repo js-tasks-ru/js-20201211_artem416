@@ -95,14 +95,8 @@ describe("events-practice/double-slider", () => {
             bubbles: true,
         });
 
-        const up = new MouseEvent("pointerup", {
-            clientX: 0,
-            bubbles: true,
-        });
-
         leftSlider.dispatchEvent(down);
         leftSlider.dispatchEvent(move);
-        leftSlider.dispatchEvent(up);
 
         expect(leftBoundary).toHaveTextContent(doubleSlider.min);
     });
@@ -253,7 +247,7 @@ describe("events-practice/double-slider", () => {
         });
 
         const move = new MouseEvent("pointermove", {
-            clientX: 200,
+            clientX: 300,
             bubbles: true,
         });
 
@@ -268,7 +262,7 @@ describe("events-practice/double-slider", () => {
         const customEvent = spyDispatchEvent.mock.calls[0][0];
 
         expect(spyDispatchEvent).toHaveBeenCalled();
-        expect(customEvent.detail).toEqual({ from: 120, to: 150 });
+        expect(customEvent.detail).toEqual({ from: 130, to: 150 });
     });
 
     it("should have ability to be destroyed", () => {
