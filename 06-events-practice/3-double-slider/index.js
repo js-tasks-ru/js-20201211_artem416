@@ -185,3 +185,4 @@ export default class DoubleSlider {
         return { from, to };
     }
 }
+g;
