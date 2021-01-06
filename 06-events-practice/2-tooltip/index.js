@@ -12,7 +12,7 @@ class Tooltip {
     }
 
     onMouseOver = (e) => {
-        const element = en.target.closest("[data-tooltip]");
+        const element = e.target.closest("[data-tooltip]");
 
         if (element) {
             this.render(element.dataset.tooltip);
