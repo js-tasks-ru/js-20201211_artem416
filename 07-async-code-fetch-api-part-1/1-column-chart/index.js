@@ -3,7 +3,7 @@ import fetchJson from "./utils/fetch-json.js";
 const BACKEND_URL = "https://course-js.javascript.ru";
 
 export default class ColumnChart {
-    element;
+    element = document.createElement("div");
     subElements = {};
     chartHeight = 50;
 
@@ -13,29 +13,17 @@ export default class ColumnChart {
         formatHeading = (data) => data,
         url = "",
         range = {
-            from: new Date(),
-            to: new Date(),
+            from: new Date("2020-04-11"),
+            to: new Date("2020-05-11"),
         },
     } = {}) {
         this.url = new URL(url, BACKEND_URL);
+
         this.range = range;
         this.label = label;
         this.link = link;
         this.formatHeading = formatHeading;
-
         this.render();
-    }
-
-    render() {
-        const { from, to } = this.range;
-        const element = document.createElement("div");
-
-        element.innerHTML = this.template;
-
-        this.element = element.firstElementChild;
-        this.subElements = this.getSubElements(this.element);
-
-        this.loadData(from, to);
     }
 
     getHeaderValue(data) {
@@ -44,29 +32,31 @@ export default class ColumnChart {
         );
     }
 
-    async loadData(from, to) {
+    render() {
+        this.element.innerHTML = this.template;
+        this.element = this.element.firstElementChild;
+        this.subElements = this.getSubElements(this.element);
+        this.update();
+    }
+
+    async getData(from, to) {
         this.element.classList.add("column-chart_loading");
-        this.subElements.header.textContent = "";
-        this.subElements.body.innerHTML = "";
 
         this.url.searchParams.set("from", from.toISOString());
         this.url.searchParams.set("to", to.toISOString());
 
         const data = await fetchJson(this.url);
+        this.setUpdate(data);
+    }
 
-        this.setNewRange(from, to);
-
+    setUpdate(data) {
         if (data && Object.values(data).length) {
             this.subElements.header.textContent = this.getHeaderValue(data);
             this.subElements.body.innerHTML = this.getColumnBody(data);
 
             this.element.classList.remove("column-chart_loading");
+            console.error(data);
         }
-    }
-
-    setNewRange(from, to) {
-        this.range.from = from;
-        this.range.to = to;
     }
 
     getColumnBody(data) {
@@ -122,8 +112,8 @@ export default class ColumnChart {
         }, {});
     }
 
-    async update(from, to) {
-        return await this.loadData(from, to);
+    async update(from = this.range.from, to = this.range.to) {
+        return await this.getData(from, to);
     }
 
     destroy() {
