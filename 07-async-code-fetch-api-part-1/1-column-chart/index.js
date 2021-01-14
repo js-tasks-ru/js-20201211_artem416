@@ -55,7 +55,6 @@ export default class ColumnChart {
             this.subElements.body.innerHTML = this.getColumnBody(data);
 
             this.element.classList.remove("column-chart_loading");
-            console.error(data);
         }
     }
 
